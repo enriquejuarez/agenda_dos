@@ -3,6 +3,8 @@ var formulario = document.getElementById('formulario_crear_usuario');
 var action = formulario.getAttribute('action');
 var divCrear = document.getElementById('crear_contacto');
 var tablaRegistrados = document.getElementById('registrados');
+var checkboxes = document.getElementsByClassName('borrar_contacto');
+var btn_borrar = document.getElementById('btn_borrar');
 
 function registroExitoso(nombre){
 	var divMensaje = document.createElement('DIV');
@@ -60,6 +62,31 @@ function construirTemplate(nombre, telefono, id){
 
 }
 
+function contactosEliminar(contactos){
+	var xhr =  new XMLHttpRequest();
+	xhr.open('GET', 'borrar.php?='+ contactos, true);
+	xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+	xhr.onreadystatechange =  function(){
+		if(xhr.readyState == 4 && xhr.status == 200){
+			var resultadoBorrar = xhr.responseText;
+			var json = JSON.parse(resultadoBorrar);
+			if (json.respuesta == false){
+				
+			}
+		}
+	}
+}
+
+function checkboxSeleccionado(){
+	var contactos=[];
+	for(i=0; i<checkboxes.length; i++){
+		if(checkboxes[i].checked==true){
+			contactos.push(checkboxes[i].name);
+		}
+	}
+	contactosEliminar(contactos);
+}
+
 function crearUsuario(){
 	var form_datos = new FormData(formulario);
 	for([key, value] of form_datos.entries()){
@@ -81,7 +108,20 @@ function crearUsuario(){
 	xhr.send(form_datos);
 }
 
+for (var i = 0; i < checkboxes.length; i++) {
+	checkboxes[i].addEventListener('change', function(){
+		if(this.checked){
+			this.parentNode.parentNode.classList.add('activo');
+		}else{
+			this.parentNode.parentNode.classList.remove('activo');
+		}
+	});
+}
 agregarContacto.addEventListener('click', function(e){
 	e.preventDefault();
 	crearUsuario();
+});
+
+btn_borrar.addEventListener('click', function(){
+	checkboxSeleccionado();
 });

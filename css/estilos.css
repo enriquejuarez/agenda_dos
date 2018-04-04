@@ -145,3 +145,6 @@ td.borrar input{
   margin: 0 auto;
   display: block;
 }
+.activo{
+  background-color: red!important;
+}
