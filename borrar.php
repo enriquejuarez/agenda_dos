@@ -9,7 +9,8 @@
         if (peticion_ajax()){
         	echo json_encode(array(
         		'respuesta' => $resultado,
-        		'sql' => $sql
+        		'sql' => $sql,
+            'borrados' => $conn->affected_rows
         	));
         }else{
         	exit;

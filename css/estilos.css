@@ -42,10 +42,45 @@ div.campo {
   margin-bottom: 20px;
 }
 div.campo label {
-  width: 120px;
+  width: 80px;
   display: inline-block;
-  font-size: 16px;
+  float: left;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: bold;
   font-family: Arial, Helvetica, Serif;
+  text-transform: uppercase;
+  text-align: right;
+  margin-right: 20px;
+}
+div.campo input{
+  height: 30px;
+  width: 70%;
+  padding: 10px;
+}
+
+.boton{
+  background-color: orange;
+  border: none;
+  padding: 10px 30px;
+  cursor: pointer;
+  color: white;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+div.buscar{
+  margin-bottom: 20px;
+}
+div.buscar h2{
+  margin-bottom: 10px;
+}
+#buscador{
+  width: 100%;
+  padding: 10px;
+}
+span#total{
+  font-weight: bold;
+  font-family: arial, Helvetica;
 }
 
 div.existentes {

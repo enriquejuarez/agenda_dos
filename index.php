@@ -42,14 +42,17 @@
                 <h2>Buscar</h2>
                 <input type="text" name="buscador" id="buscador" placeholder="Buscar">
               </div>
-              <p>Resultados: <?php echo $resultado->num_rows; ?> </p>
+              <p>Resultados: <span id="total"><?php echo $resultado->num_rows; ?></span> </p>
               <table id="registrados">
                     <thead>
                         <tr>
                           <th>Nombre</th>
                           <th>Teléfono</th>
                           <th>Editar</th>
-                          <th><button type="button" name="Borrar" id="btn_borrar" class="borrar">Borrar</button></th>
+                          <th>
+                              <button type="button" name="Borrar" id="btn_borrar" class="borrar">Borrar</button>
+                              <input type="checkbox" name="borrar_todos" id="borrar_todos">
+                          </th>
                         </tr>
                     </thead>
                     <tbody>

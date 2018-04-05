@@ -7,7 +7,9 @@ var checkboxes = document.getElementsByClassName('borrar_contacto');
 var btn_borrar = document.getElementById('btn_borrar');
 var tableBody = document.getElementsByTagName('tbody');
 var divExistentes = document.getElementsByClassName('existentes');
-var inputBuscador =document.getElementById('buscador');
+var inputBuscador = document.getElementById('buscador');
+var totalRegistros = document.getElementById('total');
+var checkTodos =  document.getElementById('borrar_todos');
 
 function registroExitoso(nombre){
 	var divMensaje = document.createElement('DIV');
@@ -110,6 +112,8 @@ function contactosEliminar(contactos){
 				/*console.log("SQL: "+json.sql);*/
 				eliminarHTML(contactos);
 				mostrarEliminado();
+				var totalActualizado = parseInt(totalRegistros.textContent) - json.borrados;
+				totalRegistros.innerHTML = totalActualizado;
 			}
 		}
 	}
@@ -141,6 +145,8 @@ function crearUsuario(){
 			if (json.respuesta){
 				registroExitoso(json.nombre);
 				construirTemplate(json.nombre, json.telefono, json.id);
+				var totalActualizado =  parseInt(totalRegistros.textContent) + 1;
+				totalRegistros.innerHTML = totalActualizado;
 			}
 		}
 	}
@@ -165,6 +171,26 @@ btn_borrar.addEventListener('click', function(){
 	checkboxSeleccionado();
 });
 
+function actualizarNumero(){
+	var registros = tableBody[0].getElementsByTagName('tr');
+	var cantidad = 0;
+	var ocultos = 0;
+
+	for (var i = registros.length - 1; i >= 0; i--) {
+		var elementos = registros[i];
+		if (elementos.style.display == 'table-row'){
+			cantidad++;
+			totalRegistros.innerHTML =  cantidad;
+		}else if (elementos.style.display == 'none'){
+			ocultos++;
+			if(ocultos == registros.length){
+				ocultos -= registros.length;
+				totalRegistros.innerHTML = ocultos;
+			}
+		}
+	}
+}
+
 function ocultarRegistros(nombre_buscar){
 	//varaiable para todos los registros
 	var registros = tableBody[0].getElementsByTagName('tr');
@@ -174,15 +200,33 @@ function ocultarRegistros(nombre_buscar){
 
 	for (var i = 0; i < registros.length; i++) {
 		registros[i].style.display = 'none';
-		if(registros[i].childNodes[1].textContent.replace(/\s/g, "").search(expresion) != -1){
-			registros[i].style.display = 'table-row';
-		}else if (nombre=''){
+		registros[i].classList.add('ocultar');
+		if((registros[i].childNodes[1].textContent.replace(/\s/g, "").search(expresion) != -1) || (nombre='')){
+			registros[i].classList.add('mostrar');
+			registros[i].classList.remove('ocultar');
 			registros[i].style.display = 'table-row';
 		}
 	}
-
+	actualizarNumero();
 }
 
 inputBuscador.addEventListener('input', function(){
 	ocultarRegistros(this.value);
-})
+});
+
+//seleccionar todos
+checkTodos.addEventListener('click', function(){
+	if(this.checked){
+		var todosRegistros =  tableBody[0].getElementsByTagName('tr');
+		for (var i = 0; i < checkboxes.length; i++) {
+			checkboxes[i].checked = true;
+			todosRegistros[i].classList.add('activo');
+		}
+	}else{
+		var todosRegistros =  tableBody[0].getElementsByTagName('tr');
+		for (var i = 0; i < checkboxes.length; i++) {
+			checkboxes[i].checked = false;
+			todosRegistros[i].classList.remove('activo');
+		}
+	}
+});
