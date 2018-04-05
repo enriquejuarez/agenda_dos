@@ -1,5 +1,6 @@
 <?php 
-    $conn = new mysqli('localhost', 'root','hostserver119/','contactos');
+    //$conn = new mysqli('localhost', 'root','hostserver119/','contactos');
+    $conn = new mysqli('localhost', 'root','','contactos');
     
     if($conn->connect_error) {
       echo $error = $conn->connect_error;

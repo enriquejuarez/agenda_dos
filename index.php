@@ -38,6 +38,10 @@
         
         <div class="contenido existentes">
               <h2>Contactos Existentes</h2>    
+              <div class="buscar">
+                <h2>Buscar</h2>
+                <input type="text" name="buscador" id="buscador" placeholder="Buscar">
+              </div>
               <p>Resultados: <?php echo $resultado->num_rows; ?> </p>
               <table id="registrados">
                     <thead>
@@ -52,7 +56,7 @@
                         <?php //fetch_assoc, fetch_row, fetch_array, fetch_all, fetch_objects  ?>
                         <?php while($registros = $resultado->fetch_assoc() ) { ?>
                         <?php //dentro parentesis (MYSQLI_ASSOC, MYSQLI_NUM) ?>
-                            <tr>
+                            <tr id="<?php echo $registros['id']?>">
                                   <td>
                                     <?php echo $registros['nombre']; ?>
                                   </td>

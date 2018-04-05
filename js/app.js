@@ -5,6 +5,9 @@ var divCrear = document.getElementById('crear_contacto');
 var tablaRegistrados = document.getElementById('registrados');
 var checkboxes = document.getElementsByClassName('borrar_contacto');
 var btn_borrar = document.getElementById('btn_borrar');
+var tableBody = document.getElementsByTagName('tbody');
+var divExistentes = document.getElementsByClassName('existentes');
+var inputBuscador =document.getElementById('buscador');
 
 function registroExitoso(nombre){
 	var divMensaje = document.createElement('DIV');
@@ -62,19 +65,55 @@ function construirTemplate(nombre, telefono, id){
 
 }
 
+function mostrarEliminado(){
+	var divEliminado = document.createElement('DIV');
+	divEliminado.setAttribute('id', 'borrado');
+
+	//agregar texto
+	var texto = document.createTextNode('Eliminado de la lista de contactos');
+	divEliminado.appendChild(texto);
+
+	divExistentes[0].insertBefore(divEliminado, divExistentes[0].childNodes[0]);
+	//agregar clase de CSS
+	divEliminado.classList.add('mostrar');
+
+	//ocultar el mensaje de creacion
+	setTimeout(function(){
+		divEliminado.classList.add('ocultar');
+		setTimeout(function(){
+			var divPadreMensaje = divEliminado.parentNode;
+			divPadreMensaje.removeChild(divEliminado);
+		}, 500);
+	}, 3000);
+}
+
+function eliminarHTML(ids_borrados){
+	for(i=0; i < ids_borrados.length; i++){
+		var elementoBorrar =  document.getElementById(ids_borrados[i]);
+		tableBody[0].removeChild(elementoBorrar);
+	}
+}
+
 function contactosEliminar(contactos){
 	var xhr =  new XMLHttpRequest();
-	xhr.open('GET', 'borrar.php?='+ contactos, true);
+	xhr.open('GET', 'borrar.php?id='+ contactos, true);
+	console.log(contactos);
 	xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 	xhr.onreadystatechange =  function(){
 		if(xhr.readyState == 4 && xhr.status == 200){
 			var resultadoBorrar = xhr.responseText;
 			var json = JSON.parse(resultadoBorrar);
 			if (json.respuesta == false){
-				
+				alert("Selecciona un elemento");
+			}else{
+				console.log("Resultado: " + resultadoBorrar);
+				/*console.log("SQL: "+json.sql);*/
+				eliminarHTML(contactos);
+				mostrarEliminado();
 			}
 		}
 	}
+	xhr.send();
 }
 
 function checkboxSeleccionado(){
@@ -125,3 +164,25 @@ agregarContacto.addEventListener('click', function(e){
 btn_borrar.addEventListener('click', function(){
 	checkboxSeleccionado();
 });
+
+function ocultarRegistros(nombre_buscar){
+	//varaiable para todos los registros
+	var registros = tableBody[0].getElementsByTagName('tr');
+	
+	//expresion regular que busca el nombre con case insensitive
+	var expresion = new RegExp(nombre_buscar, "i");
+
+	for (var i = 0; i < registros.length; i++) {
+		registros[i].style.display = 'none';
+		if(registros[i].childNodes[1].textContent.replace(/\s/g, "").search(expresion) != -1){
+			registros[i].style.display = 'table-row';
+		}else if (nombre=''){
+			registros[i].style.display = 'table-row';
+		}
+	}
+
+}
+
+inputBuscador.addEventListener('input', function(){
+	ocultarRegistros(this.value);
+})
